@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/localization.dart';
 import 'package:flutter_localization/second_page.dart';
@@ -7,6 +9,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static StreamController<bool> streamController = StreamController.broadcast();
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -22,7 +25,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MyHomePage(title: LocalizationService.of(context)?.translate("demoHomePage") ?? "--"),
+      home: StreamBuilder<bool>(
+          stream: streamController.stream,
+          builder: (context, snapshot) {
+            return MyHomePage(title: LocalizationService.of(context)?.translate("demoHomePage") ?? "--");
+          }),
     );
   }
 }
@@ -64,7 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       onTap: () {
                         Locale newLocale = LocalizationService.supportedLocales[index];
                         LocalizationService.of(context)?.load(newLocale: newLocale);
-                        setState(() {});
+                        Future.delayed(Duration(seconds: 5)).then((value) {
+                          MyApp.streamController.add(true);
+                        });
                       },
                       child: Padding(
                         padding: EdgeInsets.all(4),
