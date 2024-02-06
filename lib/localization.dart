@@ -51,6 +51,7 @@ class LocalizationService {
   static const localizationDelegate = [
     GlobalMaterialLocalizations.delegate, // works on alert, ok, cancel translation
     GlobalWidgetsLocalizations.delegate, // RTL and LTR
+    GlobalCupertinoLocalizations.delegate,
     _delegate
   ];
 }

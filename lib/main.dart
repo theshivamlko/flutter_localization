@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("MyHomePage  $context");
+    print("MyHomePage  build $context");
 
     return Scaffold(
       appBar: AppBar(
