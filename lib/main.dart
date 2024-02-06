@@ -15,6 +15,9 @@ class MyApp extends StatelessWidget {
     print("MyApp  $context");
     return MaterialApp(
       title: 'Flutter Demo',
+      supportedLocales: LocalizationService.supportedLocales,
+      localizationsDelegates: LocalizationService.localizationDelegate,
+      localeResolutionCallback: LocalizationService.localeResolutionCallback,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -55,11 +58,27 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            ...List.generate(
+                LocalizationService.supportedLocales.length,
+                (index) => GestureDetector(
+                      onTap: () {
+                        Locale newLocale = LocalizationService.supportedLocales[index];
+                        LocalizationService.of(context)?.load(newLocale: newLocale);
+                        setState(() {});
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Text(
+                          LocalizationService.supportedLocales[index].languageCode,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    )),
+            Text(
+              LocalizationService.of(context)?.translate("descriptionCount") ?? "--",
             ),
-            const Text(
-              'India is my country',
+            Text(
+              LocalizationService.of(context)?.translate("india") ?? "--",
             ),
             Text(
               '$_counter',

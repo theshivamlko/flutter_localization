@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 class LocalizationService {
-  final Locale locale;
+  late Locale locale;
 
   LocalizationService(this.locale);
 
@@ -16,10 +16,13 @@ class LocalizationService {
 
   Map<String, String> _localizedStrings = {};
 
-  Future<void> load() async {
-    print("LocalizationService load lang/${locale.languageCode}.json");
-    final jsonString = await rootBundle.loadString('lang/${locale.languageCode}.json');
-    Map<String, dynamic> jsonMap = json.decode(jsonString) as Map<String, String>;
+  Future<void> load({Locale? newLocale}) async {
+    if (newLocale != null) {
+      this.locale = newLocale;
+    }
+    print("LocalizationService load lang/${locale!.languageCode}.json");
+    final jsonString = await rootBundle.loadString('lang/${locale!.languageCode}.json');
+    Map<String, dynamic> jsonMap = json.decode(jsonString);
     jsonMap.forEach((key, value) {
       _localizedStrings[key] = value.toString();
     });
@@ -33,10 +36,10 @@ class LocalizationService {
   static const supportedLocales = [
     Locale("en", "US"),
     Locale("hi", "IN"),
-    Locale("odi", "GB"),
+    Locale("or", "IN"),
   ];
 
-  static Locale? localeResolutionCallback(Locale? locale, Iterable<Locale>? supportedLocales) {
+  static Locale? localeResolutionCallback(Locale? locale, Iterable<Locale> supportedLocales) {
     print(
         "LocalizationService localeResolutionCallback ${locale?.languageCode} ${supportedLocales?.map((e) => e.languageCode).toList()}");
     return supportedLocales!
